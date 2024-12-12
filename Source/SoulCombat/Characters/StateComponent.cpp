@@ -1,8 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "Characters/StateComponent.h"
 #include "StateComponent.h"
+#include "TimerManager.h"
 
 // Sets default values for this component's properties
 UStateComponent::UStateComponent()
@@ -41,5 +40,29 @@ void UStateComponent::SetState(FGameplayTag NewState)
 bool UStateComponent::IsCurrentStateEqualToAny(FGameplayTagContainer StatesToCheck)
 {
 	return StatesToCheck.HasTag(CurrentState);
+}
+
+void UStateComponent::MovementInputHandler(float Duration, bool bDisableInput)
+{
+	if (bDisableInput)
+	{
+		bCanMove = false;
+	}
+
+	if (Duration > 0.0f)
+	{
+		GetWorld()->GetTimerManager().SetTimer(
+			MovementInputTimerHandle, // Timer handle
+			this,                     // Object to call function on
+			&UStateComponent::EnableMovementInput, // Function to call
+			Duration,                 // Time to wait
+			false                     // Do not loop
+		);
+	}
+}
+
+void UStateComponent::EnableMovementInput()
+{
+	bCanMove = true;
 }
 

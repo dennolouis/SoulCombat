@@ -97,6 +97,8 @@ void ASoulCombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 void ASoulCombatCharacter::Move(const FInputActionValue& Value)
 {
+	if (!State->bCanMove) return;
+
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 

@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GameplayTagContainer.h"
 #include "StateComponent.generated.h"
 
-#include "GameplayTagContainer.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -18,11 +18,13 @@ public:
 	// Sets default values for this component's properties
 	UStateComponent();
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bCanMove{ true };
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FGameplayTag CurrentState;
+
+	FTimerHandle MovementInputTimerHandle;
 
 protected:
 	// Called when the game starts
@@ -37,4 +39,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool IsCurrentStateEqualToAny(FGameplayTagContainer StatesToCheck);
+
+	UFUNCTION(BlueprintCallable)
+	void MovementInputHandler(float Duration, bool bDisableInput);
+
+	UFUNCTION(BlueprintCallable)
+	void EnableMovementInput();
 };
