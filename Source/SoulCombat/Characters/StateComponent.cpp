@@ -48,6 +48,11 @@ void UStateComponent::MovementInputHandler(float Duration, bool bDisableInput)
 	{
 		bCanMove = false;
 	}
+	else
+	{
+		bCanMove = true;
+		return;
+	}
 
 	if (Duration > 0.0f)
 	{
@@ -64,5 +69,11 @@ void UStateComponent::MovementInputHandler(float Duration, bool bDisableInput)
 void UStateComponent::EnableMovementInput()
 {
 	bCanMove = true;
+	ClearState();
+}
+
+void UStateComponent::ClearState()
+{
+	CurrentState = FGameplayTag::EmptyTag;
 }
 

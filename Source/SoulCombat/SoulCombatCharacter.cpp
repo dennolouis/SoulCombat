@@ -53,6 +53,15 @@ ASoulCombatCharacter::ASoulCombatCharacter()
 
 	State = CreateDefaultSubobject<UStateComponent>(TEXT("State Component"));
 
+	if (State)
+	{
+		ensure(State->GetOwner() == this);
+	}
+	else
+	{
+		UE_LOG(LogTemplateCharacter, Error, TEXT("State component creation failed!"));
+	}
+
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
@@ -80,7 +89,7 @@ void ASoulCombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
 		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ASoulCombatCharacter::CustomJump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		// Moving
@@ -97,6 +106,12 @@ void ASoulCombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 void ASoulCombatCharacter::Move(const FInputActionValue& Value)
 {
+	if (!State)
+	{
+		UE_LOG(LogTemplateCharacter, Error, TEXT("State is null in Move!"));
+		return;
+	}
+
 	if (!State->bCanMove) return;
 
 	// input is a Vector2D
@@ -130,5 +145,13 @@ void ASoulCombatCharacter::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+
+void ASoulCombatCharacter::CustomJump()
+{
+	if (State && State->bCanMove) // Check if movement is allowed
+	{
+		Jump(); // Call the ACharacter::Jump function
 	}
 }

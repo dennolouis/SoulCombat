@@ -45,4 +45,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void EnableMovementInput();
+
+	UFUNCTION(BlueprintCallable)
+	void ClearState();
 };
