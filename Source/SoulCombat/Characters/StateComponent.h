@@ -37,8 +37,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetState(FGameplayTag NewState);
 
-	UFUNCTION(BlueprintCallable)
-	bool IsCurrentStateEqualToAny(FGameplayTagContainer StatesToCheck);
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool IsCurrentStateEqualToAny(FGameplayTagContainer StatesToCheck) const;
 
 	UFUNCTION(BlueprintCallable)
 	void MovementInputHandler(float Duration, bool bDisableInput);

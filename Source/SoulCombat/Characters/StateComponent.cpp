@@ -37,7 +37,7 @@ void UStateComponent::SetState(FGameplayTag NewState)
 	CurrentState = NewState;
 }
 
-bool UStateComponent::IsCurrentStateEqualToAny(FGameplayTagContainer StatesToCheck)
+bool UStateComponent::IsCurrentStateEqualToAny(FGameplayTagContainer StatesToCheck) const
 {
 	return StatesToCheck.HasTag(CurrentState);
 }
