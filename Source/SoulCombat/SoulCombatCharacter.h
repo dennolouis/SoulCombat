@@ -44,8 +44,13 @@ class ASoulCombatCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
+
+	/** Custom Components */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UStateComponent* State;
+	class UStateComponent* StateComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UStatsComponent* StatsComponent;
 
 public:
 	ASoulCombatCharacter();
@@ -73,5 +78,8 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool HasEnoughStamina(float StaminaCost) const;
 };
 

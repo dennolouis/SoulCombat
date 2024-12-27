@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Characters/StateComponent.h"
+#include "Characters/StatsComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -51,11 +52,13 @@ ASoulCombatCharacter::ASoulCombatCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	State = CreateDefaultSubobject<UStateComponent>(TEXT("State Component"));
+	// Custom Components
+	StateComponent = CreateDefaultSubobject<UStateComponent>(TEXT("State Component"));
+	StatsComponent = CreateDefaultSubobject<UStatsComponent>(TEXT("Stats Component"));
 
-	if (State)
+	if (StateComponent)
 	{
-		ensure(State->GetOwner() == this);
+		ensure(StateComponent->GetOwner() == this);
 	}
 	else
 	{
@@ -104,15 +107,20 @@ void ASoulCombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	}
 }
 
+bool ASoulCombatCharacter::HasEnoughStamina(float StaminaCost) const
+{
+	return StatsComponent->Stats[EStat::Stamina] >= StaminaCost;
+}
+
 void ASoulCombatCharacter::Move(const FInputActionValue& Value)
 {
-	if (!State)
+	if (!StateComponent)
 	{
 		UE_LOG(LogTemplateCharacter, Error, TEXT("State is null in Move!"));
 		return;
 	}
 
-	if (!State->bCanMove) return;
+	if (!StateComponent->bCanMove) return;
 
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
@@ -150,7 +158,7 @@ void ASoulCombatCharacter::Look(const FInputActionValue& Value)
 
 void ASoulCombatCharacter::CustomJump()
 {
-	if (State && State->bCanMove) // Check if movement is allowed
+	if (StateComponent && StateComponent->bCanMove) // Check if movement is allowed
 	{
 		Jump(); // Call the ACharacter::Jump function
 	}
