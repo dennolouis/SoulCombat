@@ -109,6 +109,11 @@ void ASoulCombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 bool ASoulCombatCharacter::HasEnoughStamina(float StaminaCost) const
 {
+	if (!StatsComponent)
+	{
+		UE_LOG(LogTemplateCharacter, Error, TEXT("Stats Component is null"));
+		return false;
+	}
 	return StatsComponent->Stats[EStat::Stamina] >= StaminaCost;
 }
 
